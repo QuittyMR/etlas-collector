@@ -71,6 +71,7 @@ This data is removed for performance reasons, unless the 'full' tag is used.
 ## Dev notes
 This service aims to be as DRY and flexible as possible.
 Just make sure of the following:
+
 * Platforms should be single-class files with type annotations, stored in the 'platforms' directory
 * Class parameters are constants. Settings variables are defined in __init__
 * All platforms should have a '_run' method as an entry point
