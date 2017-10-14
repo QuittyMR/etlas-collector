@@ -1,9 +1,9 @@
 #Version 1.0
 FROM python:3.6.1
-MAINTAINER tomer <qtomerr@gmail.com>
+MAINTAINER Tomer Raz <qtomerr@gmail.com>
 
-ENV APP_NAME etlas-collector
-ENV APP_HOME /opt/etlas-collector
+ENV APP_NAME scraper-collector
+ENV APP_HOME /opt/scraper-collector
 
 RUN apt-get update -y && \
     apt-get install -y --force-yes \
@@ -20,7 +20,7 @@ WORKDIR ${APP_HOME}
 
 ADD ./dist .
 RUN pip install wheel
-RUN pip install --use-wheel --find-links=. etlas-collector
+RUN pip install --use-wheel --find-links=. scraper-collector
 
 RUN mkdir logs
 
@@ -30,4 +30,4 @@ EXPOSE 9041
 STOPSIGNAL SIGTERM
 
 ENV PATH ${PATH}:${APP_HOME}
-CMD etlas-collector
+CMD scraper-collector

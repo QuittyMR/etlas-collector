@@ -11,6 +11,10 @@ from appcore.services import Bootstrap, Factory
 
 # noinspection PyUnresolvedReferences
 class BasePlatform(object):
+    """
+    Utils and base functionality for platforms.
+    Method 'run' is the entry point for all deserialized platforms on the executors.
+    """
     @abstractmethod
     def API_URL(self):
         """
@@ -37,6 +41,9 @@ class BasePlatform(object):
         """
 
     def update(self, procedure: str, message: str):
+        """
+        Update the status or metadata of a task
+        """
         self.logger.debug(':'.join([procedure, message]))
         if self._job:
             self._job.meta[procedure] = message

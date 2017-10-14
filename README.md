@@ -1,24 +1,43 @@
-# Etlas collector
+# Reflection based scraper
 
 #### Maintainer: [Tomer Raz](qtomerr@gmail.com)
+
+This repository is a remote fork of my HYDI-scaffolder
 
 ## Terminology
 
 * **Sanjer**: a **Sanjer** is a pre-forked process (or sub-process) that receives serialized runnables and context and executes in the background, reporting back to Redis.
 [RQ-dashboard](https://github.com/eoranged/rq-dashboard) can help you manage these remotely.
-* Collector: just shorthand for the Etlas collector
+* Collector: a complementing service that receives the reflection data from this service and uses it to generate user-serviceable forms
+which will provide the necessary data to operate the scrapers.  
 * Job ID: a string representing an HMset in Redis, containing all data pertaining to an executed job.
 
 ## The basics
 
-The Collector is a job-executor, and the 'how' to the Etlas's 'what'.
+This scraper is a job-executor and part of a pair of conjoined services, where this part handles the distributed execution 
+and the other handles user-interaction and scheduling.
 
-It receives a JSON with instructions for executing a task, instantiates a runnable for that task, serializes it and its context and hands it over to a **Sanjer** by means of a Redis proxy.
+This service receives a JSON with instructions for executing a task, 
+instantiates a runnable for that task, serializes it and its context 
+and hands it over to a **Sanjer** by means of a Redis proxy.
 
 The **Sanjer** will then execute in the background, updating its Redis key with progress, metadata and status.
 
-In short -
-you give a JSON with settings, the Collector will have it done and track progress.
+The input JSON's data is stored and delivered by the companion service, 
+which generates HTML forms to collect necessary data for execution.
+These forms are generated using reflection data provided by this service.
+
+## Why?
+
+This separation allows you to upgrade this service with new code 
+without being concerned for availability, persistence or general failure.
+
+Every scraper is completely encapsulated, and is serialized along with its context so 
+that it can be executed by any client that registers as a **Sanjer** - so you can collect
+a task from anywhere and debug it on your personal computer if need be. 
+
+Any piece of code added to this service is automatically registered, analyzed and is ready
+to be instantiated given the correct input from the companion service.
 
 ## API
 ```
@@ -42,20 +61,20 @@ Requests execution of a task. Returns a Job ID.
 Example:
 {
     "_id": "devTest",
-    "platform_id": "coinis",
+    "platform_id": "privatePlatform1",
     "settings": {
         "start_date": "4 days back",
         "end_date": "yesterday",
-        "username": "CoinISUsername",
-        "password": "CoinISPassword",
+        "username": "platformUsername",
+        "password": "platformPassword",
         "storage": {
             "type": "mysql",
             "settings": {
                 "hostname": "localhost",
-                "db": "selpy_legacy",
+                "db": "database",
                 "username": "iamauser",
                 "password": "iamapassword",
-                "table": "mac_publishers"
+                "table": "dbTable"
             }
         }
     }
@@ -67,7 +86,7 @@ Returns all available data on an executed task.
 
 During runtime, platforms may store datasets before and after processing for debugging purposes under the tags 'original' and 'processed'.
 
-This data is removed for performance reasons, unless the 'full' tag is used.
+This data is removed for performance reasons, unless the 'full' flag is used.
 ```
 
 ## Dev notes

@@ -13,11 +13,11 @@ config = {
     ],
     'packages': find_packages('app'),
     'scripts': [],
-    'name': 'etlas-collector',
+    'name': 'scraper-collector',
     'package_dir': {'': 'app'},
     'entry_points': {
         'console_scripts': {
-            'etlas-collector = appapi.__init__:main'
+            'scraper-collector = appapi.__init__:main'
         }
     }
 }
