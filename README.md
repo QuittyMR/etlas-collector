@@ -1,14 +1,16 @@
 # Etlas collector
 
-#### Maintainer: qtomerr@gmail.com
+#### Maintainer: [Tomer Raz](qtomerr@gmail.com)
 
 ## Terminology
+
 * **Sanjer**: a **Sanjer** is a pre-forked process (or sub-process) that receives serialized runnables and context and executes in the background, reporting back to Redis.
 [RQ-dashboard](https://github.com/eoranged/rq-dashboard) can help you manage these remotely.
 * Collector: just shorthand for the Etlas collector
 * Job ID: a string representing an HMset in Redis, containing all data pertaining to an executed job.
 
 ## The basics
+
 The Collector is a job-executor, and the 'how' to the Etlas's 'what'.
 
 It receives a JSON with instructions for executing a task, instantiates a runnable for that task, serializes it and its context and hands it over to a **Sanjer** by means of a Redis proxy.
