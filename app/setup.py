@@ -7,7 +7,7 @@ config = {
     'version': '1.0',
     'install_requires': [
         'nose==1.3.7',
-        'bottle==0.12.13',
+        'bottle==0.12.19',
         'configparser==3.5.0',
         'six==1.10.0'
     ],
